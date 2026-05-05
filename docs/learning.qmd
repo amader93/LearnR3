@@ -43,3 +43,18 @@ here("data-raw/nurses-stress/stress/6B/6B_1587569373/BVP.csv.gz") %>%
     n_max = 100
   )
 ```
+
+#Nedenfor har vi lavet en function og en documentation for funktionenen ved at bruge paletten og finde insert a roxygen for a function og slettet @example 
+```{r}
+#' Add two numbers together
+#'
+#' @param num1 A number here.
+#' @param num2 A number here.
+#'
+#' @returns Returns the sum of two numbers
+#'
+add_numbers <- function(num1, num2) {
+  added <- num1 + num2
+  return(added)
+}
+```
