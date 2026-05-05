@@ -13,13 +13,33 @@ library(snakecase)
 ```
 
 
-## Importing new data (Nedenstående beder R om, at åbne data-raw filen og deri nurses-stress osv. ind til HR.cvs-filen. Ved at skrive read_cvs for man R til at indhente data fra denne fil)
-#to_snake-kode fik CollectionDatetime ændret til mere læsbart collection_datetime
+## Importing new data 
+#here() beder R om, at åbne data-raw filen og deri nurses-stress osv. ind til HR.cvs-filen. Ved at skrive read_cvs får man R til at indhente data fra denne fil)
+#to_snake_case fårk overskrifte i kolonne 1 "CollectionDatetime" ændret til mere læsbart "collection_datetime", hvilket blot er en måde at gøre ens date mere tidy. n_max begrænser antal rækker, der indlæses får at man kan få overblik over sine data. I vores tilfælde er der kun 37, så alle rækker hentes, men lad os antage der i datasættet var 500, hentes der kun 100)
 ```{r}
 here("data-raw/nurses-stress/stress/5C/5C_1586886626/HR.csv.gz") %>%
   read_csv(
     show_col_types = FALSE,
-    name_repair = to_snake_case, 
-    n_max = 100 
+    name_repair = to_snake_case,
+    n_max = 100
+  )
+```
+
+## Exercise: Reading other files
+```{r}
+here("data-raw/nurses-stress/stress/5C/5C_1586886712/HR.csv.gz") %>%
+  read_csv(
+    show_col_types = FALSE,
+    name_repair = to_snake_case,
+    n_max = 100
+  )
+```
+
+```{r}
+here("data-raw/nurses-stress/stress/6B/6B_1587569373/BVP.csv.gz") %>%
+  read_csv(
+    show_col_types = FALSE,
+    name_repair = to_snake_case,
+    n_max = 100
   )
 ```
