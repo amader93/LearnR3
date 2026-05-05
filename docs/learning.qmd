@@ -4,12 +4,22 @@ author: "Your Name"
 format: html
 ---
 
-## Header 1
+## Header1 (Hver gang der er en setup, ved R at den skal læse den først. Tidyverse holder dataen mere clean og here holder dataen i sig selv.)
 
 ```{r setup}
-#| include: false
+library(tidyverse)
+library(here)
+library(snakecase)
 ```
 
+
+## Importing new data (Nedenstående beder R om, at åbne data-raw filen og deri nurses-stress osv. ind til HR.cvs-filen. Ved at skrive read_cvs for man R til at indhente data fra denne fil)
+#to_snake-kode fik CollectionDatetime ændret til mere læsbart collection_datetime
 ```{r}
-# Code chunk
+here("data-raw/nurses-stress/stress/5C/5C_1586886626/HR.csv.gz") %>%
+  read_csv(
+    show_col_types = FALSE,
+    name_repair = to_snake_case, 
+    n_max = 100 
+  )
 ```
