@@ -9,14 +9,15 @@ format: html
 ```{r setup}
 library(tidyverse)
 library(here)
-library(snakecase)
+source(here("R/functions.R"))
 ```
 
 
 ## Importing new data 
 #here() beder R om, at åbne data-raw filen og deri nurses-stress osv. ind til HR.cvs-filen. Ved at skrive read_cvs får man R til at indhente data fra denne fil)
-#to_snake_case fårk overskrifte i kolonne 1 "CollectionDatetime" ændret til mere læsbart "collection_datetime", hvilket blot er en måde at gøre ens date mere tidy. n_max begrænser antal rækker, der indlæses får at man kan få overblik over sine data. I vores tilfælde er der kun 37, så alle rækker hentes, men lad os antage der i datasættet var 500, hentes der kun 100)
+#to_snake_case fårk overskrifte i kolonne 1 "CollectionDatetime" ændret til mere læsbart "collection_datetime", hvilket blot er en måde at gøre ens date mere tidy. n_max begrænser antal rækker, der indlæses får at man kan få overblik over sine data. I vores tilfælde er der kun 37, så alle rækker hentes, men lad os antage der i datasættet var 500, hentes der kun 100). to_snake_case bliver ikke brugt andet end i funktionen som er flyttet over i functions.R og bliver derfor ikke længere. Alle de steder hvor der står eval:false er blot for at beholde vores øvelsesgange. Biblioteket library(snakecase) er slettet i toppen og i virkelighende bør nedenstående blot slettes - ellers vil den markere "error" ved rendering. Har blot beholdt det for egne noters skyld.
 ```{r}
+#| eval: false
 here("data-raw/nurses-stress/stress/5C/5C_1586886626/HR.csv.gz") %>%
   read_csv(
     show_col_types = FALSE,
@@ -27,6 +28,7 @@ here("data-raw/nurses-stress/stress/5C/5C_1586886626/HR.csv.gz") %>%
 
 ## Exercise: Reading other files
 ```{r}
+#| eval: false
 here("data-raw/nurses-stress/stress/5C/5C_1586886712/HR.csv.gz") %>%
   read_csv(
     show_col_types = FALSE,
@@ -36,6 +38,7 @@ here("data-raw/nurses-stress/stress/5C/5C_1586886712/HR.csv.gz") %>%
 ```
 
 ```{r}
+#| eval: false
 here("data-raw/nurses-stress/stress/6B/6B_1587569373/BVP.csv.gz") %>%
   read_csv(
     show_col_types = FALSE,
@@ -59,24 +62,6 @@ add_numbers <- function(num1, num2) {
 }
 ```
 
-#Obs på at file_path er et argument, mens file.path er en function
-```{r}
-#' Read in one nurses' stress data file
-#'
-#' @param file_path A path to a data file.
-#'
-#' @returns outputs a data frame/ tibble
-#'
-read <- function(file_path, max_rows = 100) {
-  data <- file_path %>%
-    readr::read_csv(
-      show_col_types = FALSE,
-      name_repair = to_snake_case,
-      n_max = max_rows
-    )
-  return(data)
-}
-```
 
 #Task 16.7
 ```{r}
