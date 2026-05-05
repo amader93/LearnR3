@@ -44,7 +44,7 @@ here("data-raw/nurses-stress/stress/6B/6B_1587569373/BVP.csv.gz") %>%
   )
 ```
 
-#Nedenfor har vi lavet en function og en documentation for funktionenen ved at bruge paletten og finde insert a roxygen for a function og slettet @example 
+#Kap. 16: Nedenfor har vi lavet en såkaldt function og en documentation for den function, vi har lavet, ved at bruge paletten (ctrl + shift + p) og finde insert a "roxygen for a function". På denne måde kan vi beskrive for os selv, hvad funktionen gør. Vi har slettet @example og en anden @, som vi ikke skulle bruge.
 ```{r}
 #' Add two numbers together
 #'
@@ -57,4 +57,33 @@ add_numbers <- function(num1, num2) {
   added <- num1 + num2
   return(added)
 }
+```
+
+#Obs på at file_path er et argument, mens file.path er en function
+```{r}
+#' Read in one nurses' stress data file
+#'
+#' @param file_path A path to a datafile
+#'
+#' @returns outputs a data frame/ tibble
+#'
+read <- function(file_path) {
+  data <- file_path %>%
+    read_csv(
+      show_col_types = FALSE,
+      name_repair = to_snake_case,
+      n_max = 100
+    )
+  return(data)
+}
+```
+
+```{r}
+here("data-raw/nurses-stress/stress/5C/5C_1586886626/HR.csv.gz") %>%
+  read()
+```
+
+```{r}
+here("data-raw/nurses-stress/stress/5C/5C_1586886712/HR.csv.gz") %>%
+  read()
 ```
