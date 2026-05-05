@@ -63,13 +63,13 @@ add_numbers <- function(num1, num2) {
 ```{r}
 #' Read in one nurses' stress data file
 #'
-#' @param file_path A path to a datafile
+#' @param file_path A path to a data file.
 #'
 #' @returns outputs a data frame/ tibble
 #'
 read <- function(file_path, max_rows = 100) {
   data <- file_path %>%
-    read_csv(
+    readr::read_csv(
       show_col_types = FALSE,
       name_repair = to_snake_case,
       n_max = max_rows
