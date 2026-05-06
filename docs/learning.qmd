@@ -9,13 +9,14 @@ format: html
 ```{r setup}
 library(tidyverse)
 library(here)
+library(fs)
 source(here("R/functions.R"))
 ```
 
 
 ## Importing new data 
 #here() beder R om, at åbne data-raw filen og deri nurses-stress osv. ind til HR.cvs-filen. Ved at skrive read_cvs får man R til at indhente data fra denne fil)
-#to_snake_case fårk overskrifte i kolonne 1 "CollectionDatetime" ændret til mere læsbart "collection_datetime", hvilket blot er en måde at gøre ens date mere tidy. n_max begrænser antal rækker, der indlæses får at man kan få overblik over sine data. I vores tilfælde er der kun 37, så alle rækker hentes, men lad os antage der i datasættet var 500, hentes der kun 100). to_snake_case bliver ikke brugt andet end i funktionen som er flyttet over i functions.R og bliver derfor ikke længere. Alle de steder hvor der står eval:false er blot for at beholde vores øvelsesgange. Biblioteket library(snakecase) er slettet i toppen og i virkelighende bør nedenstående blot slettes - ellers vil den markere "error" ved rendering. Har blot beholdt det for egne noters skyld.
+#to_snake_case fårk overskrifte i kolonne 1 "CollectionDatetime" ændret til mere læsbart "collection_datetime", hvilket blot er en måde at gøre ens date mere tidy. n_max begrænser antal rækker, der indlæses får at man kan få overblik over sine data. I vores tilfælde er der kun 37, så alle rækker hentes, men lad os antage der i datasættet var 500, hentes der kun 100). to_snake_case bliver ikke brugt andet end i funktionen som er flyttet over i functions.R og bliver derfor ikke længere. Alle de steder hvor der står eval:false er blot for at beholde vores øvelsesgange. Biblioteket library(snakecase) er slettet i toppen og i virkelighende bør nedenstående blot slettes - ellers vil den markere "error" ved rendering. Har blot beholdt det for egne noters skyld. #| eval false betyder at R ikke skal læse code chunken.
 ```{r}
 #| eval: false
 here("data-raw/nurses-stress/stress/5C/5C_1586886626/HR.csv.gz") %>%
@@ -76,4 +77,19 @@ here("data-raw/nurses-stress/stress/5C/5C_1586886712/HR.csv.gz") |>
 # Outputs all rows (`Inf` means infinity)
 here("data-raw/nurses-stress/stress/5C/5C_1586886712/HR.csv.gz") |>
   read(max_rows = Inf)
+```
+
+## Using map (dir_ls siger at i denne specifikke mappe skal alle filer med navnet HR.csv.gz indlæses, hvor recurse = TRUE betyder at hvis der er subfolders i main folderen, skal den fortsætte ned i disse subfolders for at fille alle filer)
+
+```{r}
+hr_files <- here("data-raw/nurses-stress/stress/") %>%
+  dir_ls(regexp = "HR.csv.gz", recurse = TRUE)
+
+hr_files
+
+hr_data <- hr_files %>%
+  map(read) %>% # NO BRACKETS!
+  list_rbind(names_to = "file_path_id") # dette kombinerer alle filer i en samlet tabel med ID-nr
+
+hr_data
 ```
