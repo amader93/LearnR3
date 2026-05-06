@@ -145,6 +145,14 @@ hr_data %>%
 ## 19.7 Exercise: Convert ‘get ID’ code into a function
 
 ```{r}
+#' Title
+#'
+#' @param data 
+#'
+#' @returns
+#' @export
+#'
+#' @examples
 get_participant_id <- function(data) {
   data_with_id <- data %>%
     dplyr::mutate(
