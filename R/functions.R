@@ -15,6 +15,24 @@ read <- function(file_path, max_rows = 100) {
 }
 
 
+read_all <- function(filename) {
+  # Code that does something
+  files <- here::here("data-raw/nurses-stress/") %>%
+    fs::dir_ls(regexp = filename, recurse = TRUE)
+
+  data <- files |>
+    purrr::map(read) |>
+    purrr::list_rbind(names_to = "file_path_id")
+
+  return(data)
+}
+
+#' Get the participant ID from the file path column.
+#'
+#' @param data Data with `file_path_id` column.
+#'
+#' @returns A data frame/tibble.
+#'
 get_participant_id <- function(data) {
   data_with_id <- data %>%
     dplyr::mutate(
@@ -55,4 +73,46 @@ summarise_by_datetime <- function(data) {
       .by = c(id, collection_datetime)
     )
   return(summarised_data)
+}
+
+
+#' Tidy up the dates in the survey results
+#'
+#' @param data A data frame of the survey results data.
+#'
+#' @returns A data frame.
+#'
+tidy_survey_dates <- function(data) {
+  tidied <- data |>
+    dplyr::mutate(
+      date = mdy(date),
+      start_datetime = as_datetime(paste(date, start_time)),
+      end_datetime = as_datetime(paste(date, end_time)),
+      datetime_id = start_datetime,
+      .before = start_time
+    ) |>
+    dplyr::select(-c(date, start_time, end_time, duration))
+  return(tidied)
+}
+
+#' Pivot survey data to longer format, with only IDs and datetimes
+#'
+#' @param data A data frame of the data from `tidy_survey_dates()`.
+#'
+#' @returns A dataframe
+#'
+survey_to_long <- function(data) {
+  longer <- data |>
+    dplyr::select(
+      id, datetime_id, start_datetime,
+      end_datetime
+    ) |>
+    tidyr::pivot_longer(c(start_datetime, end_datetime), names_to = NULL, values_to = "collection_datetime") |>
+    dplyr::group_by(pick(-collection_datetime)) |>
+    tidyr::complete(collection_datetime = base::seq(min(collection_datetime),
+                                                    max(collection_datetime),
+                                                    by = 60
+    )) |>
+    dplyr::ungroup()
+  return(longer)
 }
